@@ -44,11 +44,10 @@ def index():
 
 @app.route('/register.html',methods = ['GET','POST'])
 def register():
-	if request.method == 'GET':
-		return render_template('register.html')
 
 
-	elif request.method == 'POST':
+
+	if request.method == 'POST':
 		print('Catch POST Request for Signup')
 		users = mongo.db.users
 		existing_user = users.find_one({'name' : request.form['username']})
@@ -58,9 +57,10 @@ def register():
 			hashPass = bcrypt.hashpw(request.form['password'].encode('utf-8'),bcrypt.gensalt()) #creating hashed password and also salting it
 			#inserting the login credentials into the database
 			users.insert({'name' : request.form['username'] , 'password' : hashPass})
-			session['username'] == request.form['username']
+			session['username'] = request.form['username']
 			return redirect(url_for('login_success'))
-
+	elif request.method == 'GET':
+		return render_template('register.html')
 
 
 
